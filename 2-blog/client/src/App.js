@@ -1,116 +1,72 @@
-import './styles.css'
-import React, { useState, useEffect } from 'react'
-import Search from './components/Search'
-import Phonebook from './components/Phonebook'
-import Numbers from './components/Numbers'
-import services from './services/persons'
-import Error from './components/Error'
+import { useState, useEffect } from "react"
+import Blog from "./components/Blog"
+import { LoginForm } from "./components/LoginForm"
+import { LogoutButton } from "./components/LogoutButton"
+import { ErrorMessage } from "./components/ErrorMessage"
+import blogService from "./services/blogs"
+import loginService from "./services/login"
 
-export default function App() {
-  const [usePeople, setPeople] = useState([])
-  const [newName, setName] = useState('')
-  const [newNumber, setNumber] = useState('')
-  const [useSearch, setSearch] = useState('')
-  const [useSearchResults, setSearchResults] = useState([])
+const App = () => {
+  const [user, setUser] = useState(null)
+  const [blogs, setBlogs] = useState([])
   const [error, setError] = useState(null)
 
-  const getPeople = () => {
-    services.getAll().then((people) => {
-      console.log(people)
-      setPeople(people)
-    })
-  }
-
-  const postPeople = (name, number) => {
-    const id = usePeople.length + 1
-    services
-      .createNew(name, number, id)
-      .then((res) => {
-        getPeople()
-      })
-      .catch((err) => {
-        console.log(22, err.response.data.error)
-        setError(err.response.data.error)
-      })
-  }
-
-  const updatePerson = (foundPerson) => {
-    services.updatePerson({
-      ...foundPerson,
-      number: newNumber,
-    })
-    formClear()
-  }
-
-  const deleteOne = (id, name) => {
-    if (window.confirm(`Delete ${name}?`)) {
-      services.deletePerson(id)
-      getPeople()
+  useEffect(() => {
+    if (user) {
+      blogService
+        .getAll(`Bearer ${user.token}`)
+        .then((blogs) => setBlogs(blogs))
     }
-  }
-
-  useEffect(getPeople, [])
-
-  const formClear = () => {
-    getPeople()
-    setName('')
-    setNumber('')
-  }
-
-  const addPerson = (e) => {
-    e.preventDefault()
-    const filtered = usePeople.some((person) => person.name === newName)
-    console.log(filtered)
-    if (filtered) {
-      const foundPerson = usePeople.find((person) => person.name === newName)
-      if (
-        window.confirm(
-          `${newName} has already been added to the phonebook, replace the old number with a new one?`
-        )
-      ) {
-        updatePerson(foundPerson)
-      }
-    } else if (!filtered) {
-      postPeople(newName, newNumber)
-      formClear()
-    }
-  }
-
-  const getResults = () => {
-    const searchNames = usePeople.filter((person) => {
-      return person.name.toLowerCase().includes(useSearch.toLowerCase())
-    })
-    setSearchResults(searchNames)
-  }
+  }, [user])
 
   useEffect(() => {
-    setTimeout(() => {
-      setError(null)
-    }, [5000])
-  }, [error])
+    const JSONLoginUser = window.localStorage.getItem("user")
+    if (JSONLoginUser) {
+      const user = JSON.parse(JSONLoginUser)
+      setUser(user)
+      blogService.setToken(user.token)
+    }
+  }, [])
+
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    const username = e.target.username.value
+    const password = e.target.password.value
+    try {
+      const user = await loginService.login(username, password)
+      blogService.setToken(user.token)
+      setUser(user)
+      window.localStorage.setItem("user", JSON.stringify(user))
+    } catch (error) {
+      console.log("error:", error)
+      setError(error.response.data.message ?? "An error has occurred")
+      setTimeout(() => {
+        setError(null)
+      }, 5000)
+    }
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem("user")
+    window.location.reload()
+  }
 
   return (
-    <div className="App">
-      {error && <Error message={error} />}
-      <h2>Name search</h2>
-      <Search
-        getResults={getResults}
-        useSearch={useSearch}
-        setSearch={setSearch}
-        useSearchResults={useSearchResults}
-      ></Search>
-
-      <h2>Phonebook</h2>
-      <Phonebook
-        newName={newName}
-        setName={setName}
-        newNumber={newNumber}
-        setNumber={setNumber}
-        addPerson={addPerson}
-      ></Phonebook>
-
-      <h2>Numbers</h2>
-      <Numbers usePeople={usePeople} deleteOne={deleteOne}></Numbers>
+    <div>
+      <ErrorMessage error={error} />
+      <h2>blogs</h2>
+      {!user ? (
+        <LoginForm handleLogin={handleLogin} />
+      ) : (
+        <>
+          <LogoutButton handleLogout={handleLogout} />
+          {blogs.map((blog) => (
+            <Blog key={blog.id} blog={blog} />
+          ))}
+        </>
+      )}
     </div>
   )
 }
+
+export default App
