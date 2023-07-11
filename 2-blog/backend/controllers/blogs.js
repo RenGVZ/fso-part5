@@ -54,6 +54,7 @@ blogsRouter.delete("/:id", async (req, res) => {
   const id = req.params.id
   const user = await User.findById(req.body.userId)
   const blog = await Blog.findById(id)
+
   if (!blog || !user || user._id.toString() !== blog.user.toString()) {
     return res
       .status(400)
@@ -65,8 +66,11 @@ blogsRouter.delete("/:id", async (req, res) => {
 
 blogsRouter.put("/:id", async (req, res) => {
   const id = req.params.id
-  const { title, author, url, likes } = req.body
-  console.log("title", title, "author", author, "url", url, "likes", likes)
+  const { title, author, url, likes, userId } = req.body
+
+  const user = await User.findById(userId)
+  console.log("user", user)
+
   const blogToUpdate = await Blog.findByIdAndUpdate(
     id,
     {
@@ -74,11 +78,12 @@ blogsRouter.put("/:id", async (req, res) => {
       ...(title && { title }),
       ...(author && { author }),
       ...(url && { url }),
-      ...(likes && { likes }),
+      ...(likes && { likes })
     },
     { new: true, runValidators: true, context: "query" }
-  )
+  ).populate("user", { username: 1, name: 1 })
   if (blogToUpdate) {
+    console.log("blogToUpdate", blogToUpdate)
     res.json(blogToUpdate)
   } else {
     res.status(404).send({ error: "no id matches that" })
