@@ -1,9 +1,8 @@
 import { useState } from "react"
 import Toggleable from "./Toggleable"
 
-const Blog = ({ blog, handleLikeIncrease, handleDelete }) => {
+const Blog = ({ blog, user, handleLikeIncrease, handleDelete }) => {
   const [detailsVisible, setDetailsVisible] = useState(false)
-  const user = JSON.parse(localStorage.getItem("user"))
   const blogStyle = {
     display: "flex",
     flexDirection: "column",
@@ -20,7 +19,8 @@ const Blog = ({ blog, handleLikeIncrease, handleDelete }) => {
 
   return (
     <div style={blogStyle}>
-      {blog.title}
+      <div data-testid="title">{blog.title}</div>
+      <div data-testid="author">{blog.author}</div>
       <Toggleable
         toggleVisibility={() => setDetailsVisible(!detailsVisible)}
         isVisible={detailsVisible}
@@ -28,13 +28,13 @@ const Blog = ({ blog, handleLikeIncrease, handleDelete }) => {
         hideText="hide"
       >
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div>{blog.author}</div>
-          <div>{blog.url}</div>
-          <div>
-            likes: {blog.likes}{" "}
-            <button onClick={() => handleLikeIncrease(blog)}>Like</button>
+          <div data-testid="url">{blog.url}</div>
+          <div style={{ display: "flex" }}>
+            <div data-testid="likes">likes: {blog.likes} </div>{" "}
+            <div>
+              <button onClick={() => handleLikeIncrease(blog)}>Like</button>
+            </div>
           </div>
-          <div>{blog.author}</div>
         </div>
         {user.id === blog?.user?.id && (
           <button
