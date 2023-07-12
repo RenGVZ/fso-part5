@@ -5,11 +5,11 @@ export const Notifications = ({ message }) => {
     return null
   }
 
-  if(message.isError) {
+  if (message.isError) {
     return (
-    <div style={{ background: "#f86a6a", padding: "6px", color: "white" }}>
-      {message.text}
-    </div>
+      <div style={{ background: "#f86a6a", padding: "6px", color: "white" }}>
+        {message.text}
+      </div>
     )
   }
 

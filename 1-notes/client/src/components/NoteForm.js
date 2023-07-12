@@ -5,10 +5,10 @@ const NoteForm = ({ createNote }) => {
 
   const addNote = (event) => {
     event.preventDefault()
-    console.log('newNote', newNote);
+    console.log('newNote', newNote)
     createNote({
       content: newNote,
-      important: true
+      important: true,
     })
 
     setNewNote('')
@@ -18,7 +18,7 @@ const NoteForm = ({ createNote }) => {
       <h2>Create a new note</h2>
 
       <form onSubmit={addNote}>
-        <input value={newNote} onChange={e => setNewNote(e.target.value)} />
+        <input value={newNote} onChange={(e) => setNewNote(e.target.value)} />
         <button type="submit">save</button>
       </form>
     </>

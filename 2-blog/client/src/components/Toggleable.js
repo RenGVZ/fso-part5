@@ -21,4 +21,6 @@ const Toggleable = forwardRef(({ showText, hideText, children }, ref) => {
   )
 })
 
+Toggleable.displayName = "Toggleable"
+
 export default Toggleable

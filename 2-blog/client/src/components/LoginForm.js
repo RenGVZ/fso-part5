@@ -12,7 +12,7 @@ export const LoginForm = ({ handleLogin }) => {
           type="text"
           name="username"
           value={username}
-          onChange={({target}) => setUsername(target.value)}
+          onChange={({ target }) => setUsername(target.value)}
         />
       </div>
       <div>
@@ -21,7 +21,7 @@ export const LoginForm = ({ handleLogin }) => {
           type="password"
           name="password"
           value={password}
-          onChange={({target}) => setPassword(target.value)}
+          onChange={({ target }) => setPassword(target.value)}
         />
       </div>
       <button type="submit">login</button>
