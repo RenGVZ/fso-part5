@@ -32,7 +32,7 @@ const Blog = ({ blog, user, handleLikeIncrease, handleDelete }) => {
           <div style={{ display: "flex" }}>
             <div data-testid="likes">likes: {blog.likes} </div>{" "}
             <div>
-              <button onClick={() => handleLikeIncrease(blog)}>Like</button>
+              <button className="likeBtn" onClick={() => handleLikeIncrease(blog)}>Like</button>
             </div>
           </div>
         </div>
