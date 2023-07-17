@@ -83,7 +83,7 @@ const App = () => {
 
   const loginForm = () => {
     return (
-      <Toggleable buttonLabel="login">
+      <Toggleable buttonLabel="sign in">
         <LoginForm
           username={username}
           password={password}
@@ -107,8 +107,14 @@ const App = () => {
     <div>
       <h1>Notes app</h1>
       <Notification message={errorMessage} />
-      {user === null ? loginForm() : noteForm()}
+      {!user && loginForm()}
       <h2>Notes</h2>
+      {user && (
+        <div>
+          <p>{user.name} logged in</p>
+          {noteForm()}
+        </div>
+      )}
       <div>
         <button onClick={() => setShowAll(!showAll)}>
           show {showAll ? 'important' : 'all'}
