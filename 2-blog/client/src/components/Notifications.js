@@ -7,7 +7,7 @@ export const Notifications = ({ message }) => {
 
   if (message.isError) {
     return (
-      <div style={{ background: "#f86a6a", padding: "6px", color: "white" }}>
+      <div data-cy="error-notification" style={{ background: "#f86a6a", padding: "6px", color: "white" }}>
         {message.text}
       </div>
     )

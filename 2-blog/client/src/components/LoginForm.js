@@ -5,7 +5,7 @@ export const LoginForm = ({ handleLogin }) => {
   const [password, setPassword] = useState("")
 
   return (
-    <form onSubmit={(e) => handleLogin(e)}>
+    <form data-cy="login-form" onSubmit={(e) => handleLogin(e)}>
       <div>
         username{" "}
         <input
@@ -24,7 +24,7 @@ export const LoginForm = ({ handleLogin }) => {
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button type="submit">login</button>
+      <button data-cy="login-btn" type="submit">login</button>
     </form>
   )
 }

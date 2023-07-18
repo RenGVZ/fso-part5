@@ -39,7 +39,7 @@ const CreateBlogForm = ({ handleCreateBlog }) => {
         />
       </div>
 
-      <button type="submit">Create</button>
+      <button data-cy="create-btn" type="submit">Create</button>
     </form>
   )
 }

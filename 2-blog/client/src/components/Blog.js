@@ -18,7 +18,7 @@ const Blog = ({ blog, user, handleLikeIncrease, handleDelete }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div data-cy={`blog-${blog.url}`} style={blogStyle}>
       <div data-testid="title">{blog.title}</div>
       <div data-testid="author">{blog.author}</div>
       <Toggleable
@@ -32,12 +32,19 @@ const Blog = ({ blog, user, handleLikeIncrease, handleDelete }) => {
           <div style={{ display: "flex" }}>
             <div data-testid="likes">likes: {blog.likes} </div>{" "}
             <div>
-              <button className="likeBtn" onClick={() => handleLikeIncrease(blog)}>Like</button>
+              <button
+                data-cy="like-btn"
+                className="likeBtn"
+                onClick={() => handleLikeIncrease(blog)}
+              >
+                Like
+              </button>
             </div>
           </div>
         </div>
         {user.id === blog?.user?.id && (
           <button
+            data-cy="delete-btn"
             style={removeBtnStyle}
             onClick={() => handleDelete(blog.id, user.id)}
           >

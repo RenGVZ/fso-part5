@@ -36,9 +36,11 @@ const getWebToken = (request) => {
 }
 
 const tokenExtractor = (req, res, next) => {
-  const decodedToken = jwt.verify(getWebToken(req), process.env.SECRET)
-  if (!decodedToken.id) {
-    return res.status(401).json({ error: "token missing or invalid" })
+  if (!req.method === "POST" && !req.originalUrl === "/api/users") {
+    const decodedToken = jwt.verify(getWebToken(req), process.env.SECRET)
+    if (!decodedToken.id) {
+      return res.status(401).json({ error: "token missing or invalid" })
+    }
   }
   next()
 }
@@ -47,5 +49,5 @@ module.exports = {
   requestLogger,
   unknownEndpoint,
   errorHandler,
-  tokenExtractor
+  tokenExtractor,
 }
