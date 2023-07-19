@@ -13,14 +13,19 @@
 // Cypress.Commands.add('login', (email, password) => { ... })
 //
 //
-Cypress.Commands.add("createBlog", ({ title, author, url }) => {
-  const newBlog = {
-    title,
-    author,
-    url
-  }
-  cy.request("POST", "/api/blogs", newBlog)
+Cypress.Commands.add("login", ({ username, password }) => {
+  cy.get("input[name='username']").type(username)
+  cy.get("input[name='password']").type(password)
+  cy.get("[data-cy='login-btn']").click()
 })
+
+Cypress.Commands.add("createBlog", ({ title, author, url }) => {
+  cy.get("input[name='title']").type(title)
+  cy.get("input[name='author']").type(author)
+  cy.get("input[name='url']").type(url)
+  cy.get("[data-cy='create-btn']").click()
+})
+
 // -- This is a child command --
 // Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
 //

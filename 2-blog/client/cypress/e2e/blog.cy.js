@@ -77,7 +77,7 @@ describe("Blog app", function () {
     })
   })
 
-  describe.only("only the creator of a blog can delete it", function () {
+  describe("only the creator of a blog can delete it", function () {
     it("user 1 creates a blog", function () {
       // user1 logs in and creates a blog
       cy.get("input[name='username']").type("robbyzip")
@@ -116,6 +116,34 @@ describe("Blog app", function () {
       cy.get("[data-cy='blog-www.supahbyadd.io']").as("note2")
       cy.get("@note2").contains("view").click()
       cy.get("@note2").should("contain", "remove")
+    })
+  })
+
+  describe.only("checks blogs sorted by likes", function () {
+    it("creates blogs to test", function () {
+      cy.login({ username: "robbyzip", password: "secr3t" })
+      cy.contains("new note").click()
+      cy.createBlog({
+        title: "Suppah Bad",
+        author: "Jonah Hill",
+        url: "www.supahbyadd.io",
+      })
+      cy.contains("new note").click()
+      cy.createBlog({
+        title: "Rommy Rome",
+        author: "Ye",
+        url: "ww.wwjrmrmrth.co",
+      })
+      cy.get(".blog-div").eq(0).as("firstBlog")
+      cy.get("@firstBlog").contains("view").click()
+      cy.get("@firstBlog").contains("Like").click()
+
+      cy.get(".blog-div").eq(1).as("secondBlog")
+      cy.get("@secondBlog").contains("view").click()
+      cy.get("@secondBlog").contains("Like").click()
+      cy.get("@secondBlog").contains("Like").click()
+
+      cy.get(".blog-div").eq(0).should("contain", "Rommy Rome")
     })
   })
 })

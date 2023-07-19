@@ -18,7 +18,7 @@ const Blog = ({ blog, user, handleLikeIncrease, handleDelete }) => {
   }
 
   return (
-    <div data-cy={`blog-${blog.url}`} style={blogStyle}>
+    <div data-cy={`blog-${blog.url}`} style={blogStyle} className="blog-div">
       <div data-testid="title">{blog.title}</div>
       <div data-testid="author">{blog.author}</div>
       <Toggleable
